@@ -151,16 +151,28 @@ fi
 
 echo ""
 
-# 8. 执行私有仓库的 bootstrap.sh
-echo "🔧 执行配置同步..."
+# 8. 执行私有仓库的 bootstrap.sh（安装skill/instructions）
+echo "🔧 安装同步能力..."
 echo ""
 
 bash "$REPO_DIR/bootstrap.sh"
 
+# 9. 执行 apply，把仓库配置复制到本地 agent 目录
+echo ""
+echo "📥 同步配置到本地 agent..."
+echo ""
+
+python3 "$REPO_DIR/skill/scripts/agent_sync.py" apply
+
 echo ""
 echo "✅ 完成！"
 echo ""
-echo "现在你可以："
-echo "1. 启动任意 agent（Hermes/Claude/Codex/OpenCode/OpenClaw）"
-echo "2. 告诉它: '同步我的agent配置'"
-echo "3. Agent 会自动执行同步流程"
+echo "已同步的 agent 配置："
+echo "  - Hermes: ~/.hermes/"
+echo "  - Claude Code: ~/.claude/"
+echo "  - Claude Desktop: ~/Library/Application Support/Claude-3p/"
+echo "  - Codex: ~/.codex/"
+echo "  - OpenCode: ~/.config/opencode/"
+echo "  - OpenClaw: ~/.openclaw/"
+echo ""
+echo "如需后续同步，告诉任意 agent: '同步我的agent配置'"
