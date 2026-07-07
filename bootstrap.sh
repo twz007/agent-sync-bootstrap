@@ -145,13 +145,14 @@ if [ -d "$REPO_DIR" ]; then
     git pull origin main
 else
     echo "📦 克隆配置仓库..."
+    # 确保workspace目录存在
     mkdir -p "$HOME/workspace"
     gh repo clone "$PRIVATE_REPO" "$REPO_DIR"
 fi
 
 echo ""
 
-# 8. 执行私有仓库的 bootstrap.sh（安装skill/instructions）
+# 8. 执行私有仓库的 bootstrap.sh（安装skill到各agent）
 echo "🔧 安装同步能力..."
 echo ""
 
@@ -162,7 +163,16 @@ echo ""
 echo "📥 同步配置到本地 agent..."
 echo ""
 
-python3 "$REPO_DIR/skill/scripts/agent_sync.py" apply
+# 使用任意一个已安装的agent的脚本来执行apply
+if [ -f "$REPO_DIR/hermes/skills/devops/agent-sync/scripts/agent_sync.py" ]; then
+    python3 "$REPO_DIR/hermes/skills/devops/agent-sync/scripts/agent_sync.py" apply
+elif [ -f "$REPO_DIR/claude-code/skills/agent-sync/scripts/agent_sync.py" ]; then
+    python3 "$REPO_DIR/claude-code/skills/agent-sync/scripts/agent_sync.py" apply
+elif [ -f "$REPO_DIR/openclaw/skills/agent-sync/scripts/agent_sync.py" ]; then
+    python3 "$REPO_DIR/openclaw/skills/agent-sync/scripts/agent_sync.py" apply
+elif [ -f "$REPO_DIR/codex/skills/agent-sync/scripts/agent_sync.py" ]; then
+    python3 "$REPO_DIR/codex/skills/agent-sync/scripts/agent_sync.py" apply
+fi
 
 echo ""
 echo "✅ 完成！"
